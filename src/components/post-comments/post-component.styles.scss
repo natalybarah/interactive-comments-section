@@ -59,10 +59,20 @@ p{
     background-color: var(--grey-50);
     border-radius: 1rem;
     font-weight: 500;
-    color: var(--purple-200);
+    align-content: center;
+    //color: var(--purple-200);
+    
+    button {
+        display: flex;
+        border: none;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--grey-50);
+        
+    }
     span:nth-child(2){
         color: var(--purple-600);
-    }
+        }
     
     
 }

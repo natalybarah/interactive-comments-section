@@ -3,6 +3,8 @@
     flex-direction: column;
     background-color: var(--white);
     padding: 1.6rem;
+    margin-bottom: 1.6rem;
+    border-radius: 2%;
     
 }
 .user-info-container {
@@ -44,7 +46,6 @@ p{
     display: flex;
     width: 31.1rem;
     height: 4rem;
-    //margin: 1.6rem 1.25rem;
     justify-content: space-between;
     align-items: center;
 }

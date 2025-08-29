@@ -6,7 +6,7 @@ import CommentCard from '../comment-card/comment-card.component';
 
 const Replies= ()=> {
 
-    const {commentsArray, setComments} = useContext(CommentsContext);
+    const {commentsArray } = useContext(CommentsContext);
 
    const repliesC= commentsArray.comment.replies
     return(

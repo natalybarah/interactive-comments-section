@@ -14,9 +14,7 @@ export const CommentsContext= createContext({
 
 export const onIncrementVotes= (selectedVoteComment, commentsArray )=>{
     
-    /*if(selectedVoteComment.id === undefined){
-        return 
-    } else{*/ 
+   
      
         const findSelectedCommentToLike= commentsArray.find((comment)=> {
             console.log("id de comment:", comment.id)
@@ -25,13 +23,16 @@ export const onIncrementVotes= (selectedVoteComment, commentsArray )=>{
 
 
         if(findSelectedCommentToLike){
-                return commentsArray.map((comment)=>
-                comment.id===selectedVoteComment.id 
+                return commentsArray.map((comment)=>{
+                  console.log("summing here")
+              return   comment.id===selectedVoteComment.id
                 ? {...comment, score: comment.score +1}
                 : comment
-            ) 
-            
-        } else return;
+        }) 
+               
+        }
+         
+        else return;
     
     
 };
@@ -66,10 +67,10 @@ export const onDecreaseVotes= (selectedVoteComment, commentsArray)=>{
   
     const findSelectedCommentToDecrease= commentsArray.find((comment)=> comment.id === selectedVoteComment.id)
         if(findSelectedCommentToDecrease){
-            return commentsArray.map((comment)=> comment.id === selectedVoteComment.id && comment.score > 0
+            return commentsArray.map((comment)=> { console.log("i decrease NEW HERE"); return comment.id === selectedVoteComment.id && comment.score > 0
             ? {...comment, score: comment.score - 1}
             : comment
-            )
+        })
         } else return;
 }
 
@@ -84,6 +85,17 @@ const defaultCommentValues={
         score: null,
         user: {}
     }
+
+const defaultReplyValues={
+    content: "",
+    createdAt: null,
+    id: "",
+    replies:[],
+    score: null,
+    user: {},
+    username: "",
+    replyingTo: ""
+}
 
 const formatRelativeTime= (date)=> {
         const now = new Date();
@@ -113,6 +125,8 @@ const formatRelativeTime= (date)=> {
     //console.log(formatRelativeTime(pastDate)); // Output: "2 days ago"
     const createdAtTime= formatRelativeTime(pastDate);
 
+
+
        
 
 // # COMMENTS PROVIDER
@@ -121,6 +135,9 @@ export const CommentsProvider= ({children})=>{
     const {currentUserProfile} = useContext(UserContext)
     const [commentsArray, setComments]= useState([]);
     const [commentValues, setCommentValues]=useState(defaultCommentValues);
+    const [replyValues, setReplyValues]= useState(defaultReplyValues);
+    const [isReplyClick, setReplyClick]=useState(false);
+
     useCallback(formatRelativeTime, [])
     
     const onIncrementVotesReplyHandler= (selectedVoteComment)=>{
@@ -138,19 +155,19 @@ export const CommentsProvider= ({children})=>{
         setComments(onDecreaseVotesReply(selectedVoteComment, commentsArray))
     }
 
-       const onAddNewComment=(event)=>{
-        event.preventDefault();
-        //const {name, value}= event.target;
-        const newCommentsArray= [...commentsArray, commentValues];
-        setComments(newCommentsArray);
-        setCommentValues(defaultCommentValues);
-        }  
+    const onAddNewComment=(event)=>{
+    event.preventDefault();
+    //const {name, value}= event.target;
+    const newCommentsArray= [...commentsArray, commentValues];
+    setComments(newCommentsArray);
+    setCommentValues(defaultCommentValues);
+    console.log("onAddNewComment")
+    }  
 
          
  const onNewCommentChange= (event)=>{
         event.preventDefault()
-        const {name, value}= event.target
-                                                                        
+        const {name, value}= event.target                                                         
         let maxId= 0;
 
         const generateNewId= ()=>{
@@ -164,12 +181,88 @@ export const CommentsProvider= ({children})=>{
             generateNewId()
             //on add a new reply here, so the return value is updated in set comment values. 
             //aunque en otra funcion podria usar set comment values y solo copiar los datos de commentValues, y actualizar replies. podria probar
+            console.log("onNewCommentChange printing")
             setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
-    }   
+            //aqui no creo que puedo poner el newReply. replies: [newReply], porque cuando hago eso despues al hacer click
+            //en onaddnewcomment, se va a crear un nuevo objeto osea un nuevo comment.
+            //lo que necesito es 
+            //ademas el objetivo de onnewcommentchange es genera valores desde cero en createdat, score y generar un nuevo id. No puedo ponerlo aqui
     
+            //tal vez lo que necesito es acceder al current comments array y actualizar sus replies. 
+    }   
+
+const getMaxReplyId = (commentsArray)=>{
+   let maxReplyId= 0;
+    const findMaxId= (items)=>{
+       items.forEach(item=>{
+       if( item.id > maxReplyId) maxReplyId= item.id
+       if(item.replies) findMaxId(item.replies) 
+    })
+    }
+    findMaxId(commentsArray);
+    return maxReplyId
+}
+
+const onReplyChange= (event)=>{
+    event.preventDefault();
+console.log("printing before id issue")
+    const {name, value}= event.target;
+    const maxReplyId= getMaxReplyId(commentsArray);
+    console.log("on reply change in context")
+    setReplyValues({...replyValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxReplyId + 1, isReply: true})
+
+}
+
+const onAddNewReply=(event, replyingTo)=>{
+    event.preventDefault();
+ 
+    const newRepliesArray= commentsArray.map(comment=> {
+       if(comment.id === replyingTo.id ){
+        return {
+            ...comment,
+            replies: [...comment.replies, replyValues]
+            }
+        } //return comment
+        if (comment.replies && comment.replies.length >0){
+            const updatedReplies= updateNestedReplies(comment.replies, replyingTo);
+           if (updatedReplies !== comment.replies){
+                return {
+                    ...comment,
+                    replies: updatedReplies
+                }
+           }
+        }
+        return comment;
+    })
+    
+   console.log("onaddnewreply printing", event)
+
+    setComments(newRepliesArray)
+    setReplyValues(defaultReplyValues);
+    console.log("new comments", newRepliesArray)
+}
+
+const updateNestedReplies= (replies, targetReply)=>{
+    return replies.map(reply=> {
+        if(reply.id === targetReply.id){
+            console.log("before updating replyvalues")
+            return {
+                ...reply,
+                replies: [...(reply.replies || []), replyValues]
+            }
+        }
+        if (reply.replies && reply.replies.length > 0){
+            return {
+                ...reply,
+                replies: updateNestedReplies(reply.replies, targetReply )
+            }
+        }
+        return reply;
+    })
+};
 
 
-    const value= {commentsArray, setComments,  onIncrementVotesHandler, onIncrementVotesReplyHandler, onDecreaseVotesHandler, onDecreaseVotesReplyHandler, onAddNewComment, onNewCommentChange, commentValues}
+    const value= {commentsArray, isReplyClick, setReplyClick, setComments,  onIncrementVotesHandler, onIncrementVotesReplyHandler, onDecreaseVotesHandler, onDecreaseVotesReplyHandler, onAddNewComment, onNewCommentChange, commentValues, onReplyChange, replyValues, onAddNewReply}
     
     return <CommentsContext value={value}>{children}</CommentsContext>
 

@@ -1,15 +1,16 @@
 import './post-component.styles.scss';
 import NewCommentBox from '../new-comment/new-comment';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { CommentsContext } from '../../context/comments-context';
 import {UserContext} from '../../context/user-context'
 import rawData from '../../data.json';
-import CommentCard from '../comment-card/comment-card.component';
+import CommentsWithReplies from '../comment-card/comments.replies';
 
 const PostComments= () =>{
     
-    const {setComments, commentsArray, onIncrementVotesReplyHandler, onDecreaseVotesReplyHandler}= useContext(CommentsContext);
+    const {setComments, commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler}= useContext(CommentsContext);
     const {setCurrentUserProfile} = useContext(UserContext);
+    const [replyingTo, setReplyingTo]= useState(null);
 
     const {comments, currentUser}=rawData
 
@@ -26,29 +27,25 @@ const PostComments= () =>{
     );
     
   
-  
 
     return (
-       <div> 
-        { commentsArray.map((comment)=> {
-                    //const {id, content, user, createdAt, score, replies}= comment;
-                    //const {image, username}= user;
-                    //const selectedVoteComment= {id, content, user,  createdAt, score, replies, image, username};
-
-                return(
-                        <div key={comment.id}>
-                            <CommentCard comment={comment} />
-                           {comment.replies.map((reply)=> reply.id ? <CommentCard key={reply.id} onDownVote={onDecreaseVotesReplyHandler} onVote={onIncrementVotesReplyHandler} comment={reply} /> : null)}
-                           
-                        </div>)
-                        
-                        
-
-                        
-        } )}
-            <NewCommentBox/>
+       <div>    
+            {commentsArray.map((comment)=> (
+            
+                <CommentsWithReplies key={comment.id} onVote={onIncrementVotesHandler} onDownVote={onDecreaseVotesHandler}  onReply={setReplyingTo}  /*onVote={onIncrementVotesReplyHandler} onDownVote={onDecreaseVotesReplyHandler}*/ comment={comment}/>
+            ))
+            }
+            <NewCommentBox replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/>
         </div>
     )  
 }
 
 export default PostComments;
+/*
+el comment con mas likes, si el comment 1 > comment 2
+entonces render comment 1
+
+-comment 2 > comment 3 
+render comment 2
+*/ 
+

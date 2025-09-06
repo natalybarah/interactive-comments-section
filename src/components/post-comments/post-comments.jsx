@@ -25,12 +25,17 @@ const PostComments= () =>{
         setCurrentUserProfile(currentUser)
     }, []
     );
-    
+    //const commentsToSort=[...commentsArray];
+    const compare=(a, b)=>{
+        return b.score-a.score
+    }
+
+    const sortedComments= commentsArray.sort(compare)
   
 
     return (
        <div>    
-            {commentsArray.map((comment)=> (
+            {sortedComments.map((comment)=> (
             
                 <CommentsWithReplies key={comment.id} onVote={onIncrementVotesHandler} onDownVote={onDecreaseVotesHandler}  onReply={setReplyingTo}  /*onVote={onIncrementVotesReplyHandler} onDownVote={onDecreaseVotesReplyHandler}*/ comment={comment}/>
             ))

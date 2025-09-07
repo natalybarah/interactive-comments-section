@@ -12,7 +12,7 @@ const CommentsContainer= () => {
     return(
             <div className="main-container"> 
                 <PostComments/> 
-                <Modal/> 
+           {/*    <Modal/>*/} 
             </div>
     )
 }

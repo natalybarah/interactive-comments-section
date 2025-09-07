@@ -5,21 +5,13 @@
   padding: 1.6rem;
   margin-bottom: 1.6rem;
   border-radius: 2%;
-
-
-
 }
-.replies-wrapper {
 
-  margin-left: 1.6rem; /* Increased for better visual hierarchy */
-  //position: rlative;
+.replies-wrapper {
+  margin-left: 1.6rem;
    
 }
 
-/*div.replies-wrapper > div.comment-container {
-  background-color: #f8f9fa;
-  border-left: 3px solid var(--moderate-blue);
-}*/
 
 .user-info-container {
     display: flex;
@@ -37,7 +29,6 @@
 
 .user-info {
     display: flex;
-   // justify-content: space-evenly;
     gap: 10px;
 
     h2 {
@@ -56,10 +47,12 @@ p{
 
 .comments-actions {
     display: flex;
-    max-width: 31.1rem;
+    max-width: 29.9rem;
     height: 4rem;
     justify-content: space-between;
     align-items: center;
+
+  
 }
 
 .vote-container {
@@ -67,14 +60,12 @@ p{
     display: flex;
     width: 10rem;
     height: 4rem;
-    //align-self: start;
     justify-content:space-around;
     align-items: center;
     background-color: var(--grey-50);
     border-radius: 1rem;
     font-weight: 500;
     align-content: center;
-    //color: var(--purple-200);
     
     button {
         display: flex;
@@ -93,22 +84,42 @@ p{
 .reply-container{
     width: 6.6rem;
     height: 2.4rem;
-    margin-right: 1.6rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: var(--purple-600);
     font-weight: 500;
-    /*span:nth-child(2){
-        color: red;
-        margin-right: 1.6rem;
-    }*/
   
 }
 
-p{
-    margin-bottom: 1.6rem;
-   // line-height: 3px;
+.action-buttons{
+    @extend .reply-container;
+    justify-content: center;
+    width:auto;
+    gap: .5rem;
+
+    button{
+        background-color: var(--white);
+        border-style: none;
+        padding: 0;
+    }
+
+    span:nth-child(2){
+        display:inline-block;
+        margin-right: 1.5rem;
+    }
 }
 
 
+
+p{
+    margin-bottom: 1.6rem;
+}
+
+
+.delete-label{
+    color: var(--pink-400);
+}
+.edit-label{
+    color: var(--purple-600);
+}

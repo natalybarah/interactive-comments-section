@@ -9,13 +9,17 @@ import EditIcon from "../../assets/icons/icon-edit.svg";
 
 const CommentCard= ({comment,  onDownVote, onVote, onReply})=> {
 
-const {  onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick}= useContext(CommentsContext);
+const {  onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick, onDeleteComment, commentsArray}= useContext(CommentsContext);
 const {currentUserProfile}= useContext(UserContext);
 
 const voteHandlerIncrease= onVote|| onIncrementVotesHandler; 
 const voteHandlerDecrease= onDownVote || onDecreaseVotesHandler; 
-console.log(currentUserProfile.username, "este currentUserProfile username")
-console.log(comment.username, " este comment.Username!")
+//const onDeleteHandler= onDeleteComment || 
+//console.log(currentUserProfile.username, "este currentUserProfile username")
+//console.log(comment.username, " este comment.Username!")
+//console.log(comment, "COMMent papa", comment.user.image)
+console.log("i hit next?")
+console.log(commentsArray, " de comment card")
     return(
          <div>
             <div key={comment.id} className="comment-container">
@@ -35,11 +39,17 @@ console.log(comment.username, " este comment.Username!")
                             </div>
                             { currentUserProfile.username === comment.user.username ? 
                                 
-                                <div className="action-buttons" >
-                                    <button><img alt="delete" src={DeleteIcon}/></button>
-                                    <span className="delete-label">Delete</span>
-                                    <button><img alt="edit" src={EditIcon}/></button>
-                                    <span className="edit-label">Edit</span>
+                                <div className="action-buttons" onClick={()=> onDeleteComment(comment)} >
+                                    <button>
+                                        <img alt="delete" src={DeleteIcon}/>
+                                        <span className="delete-label">Delete</span>
+                                    </button>
+                                    
+                                    <button>
+                                        <img alt="edit" src={EditIcon}/>
+                                        <span className="edit-label">Edit</span>
+                                    </button>
+
                                 </div>
                                 : <div className="reply-container">
                                     <img src={ReplyIcon} alt=""/>
@@ -58,3 +68,4 @@ console.log(comment.username, " este comment.Username!")
 export default CommentCard;
 //si es mi comentario, me sale delete o edit
 //si no es mi comentario me sale reply
+//aver tengo los 3 comments renderizados, luego hit delete, se ejecuta delete y 

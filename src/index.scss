@@ -21,12 +21,12 @@ code {
    License: none (public domain)
 */
 
-html, body, div, span, applet, object, iframe,
+html, body, div, span, applet, object, iframe, 
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
+b, u, i, center, button,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
@@ -70,7 +70,7 @@ table {
 // BASE STYLES
 
 
-html{
+html {
 	font-size: 62.5% ;
 	box-sizing: border-box;
 	font-family: "Rubik", sans-serif;
@@ -97,3 +97,4 @@ body {
 	--grey-50: hsl(228, 33%, 97%);
 	--white: hsl(0, 0%, 100%);
 }
+

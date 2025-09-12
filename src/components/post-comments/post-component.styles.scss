@@ -5,6 +5,7 @@
   padding: 1.6rem;
   margin-bottom: 1.6rem;
   border-radius: 2%;
+  font-family: "Rubik", sans-serif;
 }
 
 .replies-wrapper {
@@ -51,7 +52,7 @@ p{
     height: 4rem;
     justify-content: space-between;
     align-items: center;
-
+font-family: "Rubik", sans-serif;
   
 }
 
@@ -96,30 +97,26 @@ p{
     @extend .reply-container;
     justify-content: center;
     width:auto;
-    gap: .5rem;
+    gap: 2rem;
 
     button{
         background-color: var(--white);
         border-style: none;
         padding: 0;
     }
-
-    span:nth-child(2){
-        display:inline-block;
-        margin-right: 1.5rem;
-    }
 }
 
-
-
-p{
+p {
     margin-bottom: 1.6rem;
 }
 
 
 .delete-label{
     color: var(--pink-400);
+    margin-left: 1rem;
 }
+
 .edit-label{
     color: var(--purple-600);
+    margin-left: 1rem;
 }

@@ -127,6 +127,9 @@ const formatRelativeTime= (date)=> {
 
 
 
+
+
+
        
 
 // # COMMENTS PROVIDER
@@ -146,7 +149,7 @@ export const CommentsProvider= ({children})=>{
     const onIncrementVotesHandler= (selectedVoteComment)=>{
         setComments(onIncrementVotes(selectedVoteComment, commentsArray))
     }
-
+ 
     const onDecreaseVotesHandler= (selectedVoteComment) => {
         setComments(onDecreaseVotes(selectedVoteComment, commentsArray))
     }
@@ -155,41 +158,121 @@ export const CommentsProvider= ({children})=>{
         setComments(onDecreaseVotesReply(selectedVoteComment, commentsArray))
     }
 
-    const onAddNewComment=(event)=>{
-    event.preventDefault();
-    //const {name, value}= event.target;
-    const newCommentsArray= [...commentsArray, commentValues];
-    setComments(newCommentsArray);
-    setCommentValues(defaultCommentValues);
-    console.log("onAddNewComment")
-    }  
 
-         
- const onNewCommentChange= (event)=>{
-        event.preventDefault()
-        const {name, value}= event.target                                                         
-        let maxId= 0;
+/*
 
-        const generateNewId= ()=>{
-            for (let i= 0; i < commentsArray.length; i++){
-                if(commentsArray[i].id > i){
-                  maxId= commentsArray[i].id
-                } 
+AL dar click tendria que poseer en mi memoria el comment que voy a eliminar. 
+luego necesito tener acceso al comments array donde estan todos los comments
+luego necesito encontrar cual de todos esos comments fue el seleccionado, que en este caso seria por su ID
+y luego tendria que eliminarlo. 
+con algun metodo de javascript o algun metodo mas manual?
+tratare de pensar en el manual primero
+[{comment1, id: 1}, {comment 2, id:2}, {comment3, id:3}]
+tal vez podria hacver un map y adentro un filtro donde incluya todos menos los que coinciden 
+
+
+
+*/ 
+
+// # DELETE ROOT COMMENT FEATURE
+const onDeleteComment=(targetComment)=>{
+    //const findSelectedComment= commentsArray.find(comment=> selectedComment.id=== comment.id);
+
+    const findSelectedComment= (targetComment, commentsArray)=>{
+        let i=0;
+        for(i; i< commentsArray.length; i++ ){
+            if(commentsArray[i].id=== targetComment.id){
+            
+                return commentsArray[i]
             }
+            if (commentsArray[i].replies && commentsArray[i].replies.length > 0){
+                const theFound= findSelectedComment(targetComment, commentsArray[i].replies);
+                if(theFound) return theFound
+            }
+        }
+        return false
+    }
+
+//console.log(findSelectedComment(), "FIND SELECTED COMMENT")
+
+console.log(findSelectedComment(targetComment, commentsArray), "FIND SELECTED COMMENT");
+
+    const newCommentsArray= commentsArray.filter((comment) => {
+       return (comment.id !== findSelectedComment.id) //|| (newCommentsArray(comment.replies))
+
+
+    });
+    console.log(newCommentsArray, "NEW COMMENTS ARRAY"); 
+    setComments(newCommentsArray)
+}
+
+const onAddNewComment=(event)=>{
+event.preventDefault();
+//const {name, value}= event.target;
+const newCommentsArray= [...commentsArray, commentValues];
+setComments(newCommentsArray);
+setCommentValues(defaultCommentValues);
+console.log("onAddNewComment")
+}  
+
+
+
+const onNewCommentChange= (event)=>{
+    event.preventDefault()
+    const {name, value}= event.target                                                         
+    let maxId=0;
+
+    /*const generateNewId= ()=>{
+        for (let i= 0; i < commentsArray.length; i++){
+            if(commentsArray[i].id > i){
+                maxId= commentsArray[i].id
+            } 
+            if(commentsArray[i].replies && commentsArray[i].replies.length >0){
+                if(commentsArray[i].replies[i].id > i){
+                    maxId= commentsArray[i].replies[i].id
+                }
+            }
+        }
+        return maxId
+    }*/
+       /* const generateNewId5=()=>{
+        
+            const findMaxId= (items)=>{
+                items.forEach(item=>{
+                    if(item.id> maxId) maxId= item.id;
+                    if(item.replies && item.replies.length >0) findMaxId(item.replies)
+                })
+            }; findMaxId(commentsArray);
             return maxId
         }
-            generateNewId()
+            generateNewId();
             //on add a new reply here, so the return value is updated in set comment values. 
             //aunque en otra funcion podria usar set comment values y solo copiar los datos de commentValues, y actualizar replies. podria probar
-            console.log("onNewCommentChange printing")
-            setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
-            //aqui no creo que puedo poner el newReply. replies: [newReply], porque cuando hago eso despues al hacer click
-            //en onaddnewcomment, se va a crear un nuevo objeto osea un nuevo comment.
-            //lo que necesito es 
-            //ademas el objetivo de onnewcommentchange es genera valores desde cero en createdat, score y generar un nuevo id. No puedo ponerlo aqui
-    
-            //tal vez lo que necesito es acceder al current comments array y actualizar sus replies. 
-    }   
+            console.log("onNewCommentChange printing")*/
+
+
+    const generateNewId=()=>{
+
+        const findMaxId=(items)=>{
+         
+          items.forEach((item)=>{
+             
+                if(item.id > maxId) maxId= item.id;
+                console.log(item.id, "ITEM-ID")
+                if(item.replies && item.replies.length > 0)  findMaxId(item.replies)
+                console.log(item.replies, "ITEM-REPLIES")
+            }) 
+        } 
+        findMaxId(commentsArray);
+        return maxId
+       
+    }
+  generateNewId()
+    setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
+
+}   
+
+// # REPLY FEATURE
 
 const getMaxReplyId = (commentsArray)=>{
    let maxReplyId= 0;
@@ -242,6 +325,10 @@ const onAddNewReply=(event, replyingTo)=>{
     console.log("new comments", newRepliesArray)
 }
 
+
+
+
+
 const updateNestedReplies= (replies, targetReply)=>{
     return replies.map(reply=> {
         if(reply.id === targetReply.id){
@@ -262,7 +349,7 @@ const updateNestedReplies= (replies, targetReply)=>{
 };
 
 
-    const value= {commentsArray, isReplyClick, setReplyClick, setComments,  onIncrementVotesHandler, onIncrementVotesReplyHandler, onDecreaseVotesHandler, onDecreaseVotesReplyHandler, onAddNewComment, onNewCommentChange, commentValues, onReplyChange, replyValues, onAddNewReply}
+    const value= {commentsArray, isReplyClick, setReplyClick, setComments,  onIncrementVotesHandler, onIncrementVotesReplyHandler, onDecreaseVotesHandler, onDecreaseVotesReplyHandler, onAddNewComment, onNewCommentChange, commentValues, onReplyChange, replyValues, onAddNewReply, onDeleteComment}
     
     return <CommentsContext value={value}>{children}</CommentsContext>
 

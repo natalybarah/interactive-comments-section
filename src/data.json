@@ -32,7 +32,8 @@
               "png": "image-ramsesmiron.png",
               "webp": "image-ramsesmiron.webp"
             },
-            "username": "nataly"
+            "username": "nataly",
+            "replies": []
           }}]
     },
     {
@@ -59,7 +60,8 @@
               "png": "image-ramsesmiron.png",
               "webp": "image-ramsesmiron.webp"
             },
-            "username": "ramsesmiron"
+            "username": "ramsesmiron",
+            "replies": []
           }
         },
         {
@@ -73,7 +75,8 @@
               "png": "image-juliusomo.png",
               "webp": "image-juliusomo.webp"
             },
-            "username": "juliusomo"
+            "username": "juliusomo",
+            "replies": []
           }
         }
       ]

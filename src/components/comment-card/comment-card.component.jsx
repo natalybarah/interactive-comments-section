@@ -18,8 +18,8 @@ const voteHandlerDecrease= onDownVote || onDecreaseVotesHandler;
 //console.log(currentUserProfile.username, "este currentUserProfile username")
 //console.log(comment.username, " este comment.Username!")
 //console.log(comment, "COMMent papa", comment.user.image)
-console.log("i hit next?")
-console.log(commentsArray, " de comment card")
+//console.log("i hit next?")
+//console.log(commentsArray, " de comment card")
     return(
          <div>
             <div key={comment.id} className="comment-container">

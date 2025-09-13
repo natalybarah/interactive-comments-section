@@ -176,7 +176,6 @@ tal vez podria hacver un map y adentro un filtro donde incluya todos menos los q
 
 // # DELETE ROOT COMMENT FEATURE
 const onDeleteComment=(targetComment)=>{
-    //const findSelectedComment= commentsArray.find(comment=> selectedComment.id=== comment.id);
 
     const findSelectedComment= (targetComment, commentsArray)=>{
         let i=0;
@@ -192,19 +191,24 @@ const onDeleteComment=(targetComment)=>{
         }
         return false
     }
+    const matchComment= findSelectedComment(targetComment, commentsArray);
 
-//console.log(findSelectedComment(), "FIND SELECTED COMMENT")
+   const newCommentsArray= (items)=>{  
+     return   items.filter((item) =>  {
+      if(  item.id === matchComment.id) {
+        return false;
+      }
+      if(item.replies && item.replies.length > 0){
+        item.replies= newCommentsArray(item.replies); 
+      } 
+        return true;
+        })
+    }
 
-console.log(findSelectedComment(targetComment, commentsArray), "FIND SELECTED COMMENT");
-
-    const newCommentsArray= commentsArray.filter((comment) => {
-       return (comment.id !== findSelectedComment.id) //|| (newCommentsArray(comment.replies))
-
-
-    });
-    console.log(newCommentsArray, "NEW COMMENTS ARRAY"); 
-    setComments(newCommentsArray)
+    const result= newCommentsArray(commentsArray)
+    setComments(result )
 }
+
 
 const onAddNewComment=(event)=>{
 event.preventDefault();
@@ -222,35 +226,6 @@ const onNewCommentChange= (event)=>{
     const {name, value}= event.target                                                         
     let maxId=0;
 
-    /*const generateNewId= ()=>{
-        for (let i= 0; i < commentsArray.length; i++){
-            if(commentsArray[i].id > i){
-                maxId= commentsArray[i].id
-            } 
-            if(commentsArray[i].replies && commentsArray[i].replies.length >0){
-                if(commentsArray[i].replies[i].id > i){
-                    maxId= commentsArray[i].replies[i].id
-                }
-            }
-        }
-        return maxId
-    }*/
-       /* const generateNewId5=()=>{
-        
-            const findMaxId= (items)=>{
-                items.forEach(item=>{
-                    if(item.id> maxId) maxId= item.id;
-                    if(item.replies && item.replies.length >0) findMaxId(item.replies)
-                })
-            }; findMaxId(commentsArray);
-            return maxId
-        }
-            generateNewId();
-            //on add a new reply here, so the return value is updated in set comment values. 
-            //aunque en otra funcion podria usar set comment values y solo copiar los datos de commentValues, y actualizar replies. podria probar
-            console.log("onNewCommentChange printing")*/
-
-
     const generateNewId=()=>{
 
         const findMaxId=(items)=>{
@@ -265,12 +240,11 @@ const onNewCommentChange= (event)=>{
         } 
         findMaxId(commentsArray);
         return maxId
-       
     }
-  generateNewId()
+    generateNewId()
     setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
-
 }   
+
 
 // # REPLY FEATURE
 

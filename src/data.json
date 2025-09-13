@@ -32,9 +32,10 @@
               "png": "image-ramsesmiron.png",
               "webp": "image-ramsesmiron.webp"
             },
-            "username": "nataly",
-            "replies": []
-          }}]
+            "username": "nataly"
+          },
+          "replies": []
+          }]
     },
     {
       "id": 3,
@@ -60,9 +61,9 @@
               "png": "image-ramsesmiron.png",
               "webp": "image-ramsesmiron.webp"
             },
-            "username": "ramsesmiron",
-            "replies": []
-          }
+            "username": "ramsesmiron"
+          },
+          "replies": []
         },
         {
           "id": 5,
@@ -75,9 +76,9 @@
               "png": "image-juliusomo.png",
               "webp": "image-juliusomo.webp"
             },
-            "username": "juliusomo",
-            "replies": []
-          }
+            "username": "juliusomo"
+          }, 
+          "replies": []
         }
       ]
     }

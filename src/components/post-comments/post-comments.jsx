@@ -46,11 +46,3 @@ const PostComments= () =>{
 }
 
 export default PostComments;
-/*
-el comment con mas likes, si el comment 1 > comment 2
-entonces render comment 1
-
--comment 2 > comment 3 
-render comment 2
-*/ 
-

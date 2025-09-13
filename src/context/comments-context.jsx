@@ -174,7 +174,7 @@ tal vez podria hacver un map y adentro un filtro donde incluya todos menos los q
 
 */ 
 
-// # DELETE ROOT COMMENT FEATURE
+// # DELETE COMMENT FOR ROOT AND NESTED COMMENTS
 const onDeleteComment=(targetComment)=>{
 
     const findSelectedComment= (targetComment, commentsArray)=>{
@@ -210,26 +210,16 @@ const onDeleteComment=(targetComment)=>{
 }
 
 
-const onAddNewComment=(event)=>{
-event.preventDefault();
-//const {name, value}= event.target;
-const newCommentsArray= [...commentsArray, commentValues];
-setComments(newCommentsArray);
-setCommentValues(defaultCommentValues);
-console.log("onAddNewComment")
-}  
 
 
-
+//RECURSIVE ID GENERATOR
 const onNewCommentChange= (event)=>{
     event.preventDefault()
     const {name, value}= event.target                                                         
     let maxId=0;
 
     const generateNewId=()=>{
-
         const findMaxId=(items)=>{
-         
           items.forEach((item)=>{
              
                 if(item.id > maxId) maxId= item.id;
@@ -244,7 +234,30 @@ const onNewCommentChange= (event)=>{
     generateNewId()
     setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
 }   
+// HERE WE ARE GOING TO MAKE A RECURSIVE FUNCTION TO ADD NEW COMMENTS AND REPLIES
 
+const onAddNewComment=(event)=>{
+    event.preventDefault();
+    //const {name, value}= event.target;
+    const newCommentsArray= [...commentsArray, commentValues];
+    setComments(newCommentsArray);
+    setCommentValues(defaultCommentValues);
+    console.log("onAddNewComment")
+    //el objetivo es cambiar commentValues, y hacer un setCommentValues
+    //una vez commentValues cambiado deberemos asignarlo al item parent= ¨..., + commentValues]
+   
+    //el user da click en reply
+    //el user es llevado al new comment box (aqui ya debe estar autenticado currentUser, asi que tiene nombre y es un diferente objeto)
+    //commentValues se debe comenzar a actualizar con el input de cada letra 
+    //        detras de escenas, onNewCommentChange captura los valores de  content: value, genera el id
+    //setCommentValues
+
+    //el user da click en SEND y se triggea onAddNewComment!
+
+    
+    //
+
+}  
 
 // # REPLY FEATURE
 

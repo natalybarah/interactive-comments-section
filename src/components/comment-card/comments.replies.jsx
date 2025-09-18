@@ -1,23 +1,37 @@
 import CommentCard from "./comment-card.component";
 import { useContext } from "react";
+import { UserContext } from "../../context/user-context";
+import "../comment-card/comment-card.styles.scss";
 import { CommentsContext } from "../../context/comments-context";
+import NewCommentBox from "../new-comment/new-comment";
 
-const CommentsWithReplies= ({comment, onVote, onDownVote,  onReply})=>{
+const CommentsWithReplies= ({comment,  onReply})=>{
 
-    const {onIncrementVotesReplyHandler, onDecreaseVotesReplyHandler}= useContext(CommentsContext);
+    const {currentUserProfile}=useContext(UserContext);
+    const {setReplyingTo, isReplyClick, setReplyClick, replyingTo}= useContext(CommentsContext);
+
+    console.log(currentUserProfile, "user en COMMENTSWITHREPLIES")
+    console.log("isReplyClick", isReplyClick)
+    console.log("respondiendo a", replyingTo)
+
     return(
-        <div>
-        
-            <CommentCard comment={comment} onVote={onVote} onDownVote={onDownVote} onReply={()=> onReply(comment)} />
+        <div className="comment-thread">
+            <div className= "comment-card-wrapper">
+            <CommentCard comment={comment}  onReply={()=> onReply(comment)} />
+            {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
+                </div>
+                {/*isReplyClick? <NewCommentBox  /> : null*/ }
+              
             {
                 comment.replies && comment.replies.length > 0 && (
                     <div className="replies-wrapper">
                         {comment.replies.map(reply=>(
-                            <CommentsWithReplies key={reply.id}  comment={reply} onVote={onIncrementVotesReplyHandler} onDownVote={onDecreaseVotesReplyHandler}  onReply={onReply} />
+                            <CommentsWithReplies key={reply.id}  comment={reply} onReply={onReply} />
                         ))}
                     </div>
                 )
             }
+         
         </div>
     )
 

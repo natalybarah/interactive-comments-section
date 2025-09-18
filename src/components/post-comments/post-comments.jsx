@@ -8,9 +8,10 @@ import CommentsWithReplies from '../comment-card/comments.replies';
 
 const PostComments= () =>{
     
-    const {setComments, commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler}= useContext(CommentsContext);
-    const {setCurrentUserProfile} = useContext(UserContext);
+    const {commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler}= useContext(CommentsContext);
+    const { currentUserProfile, setCurrentUserProfile} = useContext(UserContext);
     const [replyingTo, setReplyingTo]= useState(null);
+    const { setComments} = useContext(CommentsContext)
 
     const {comments, currentUser}=rawData
 
@@ -23,24 +24,28 @@ const PostComments= () =>{
     useEffect(
         ()=>{
         setCurrentUserProfile(currentUser)
-    }, []
-    );
+    }, []);
+
+
     //const commentsToSort=[...commentsArray];
     const compare=(a, b)=>{
         return b.score-a.score
     }
-
+    
     const sortedComments= commentsArray.sort(compare)
   
+    console.log(currentUserProfile, "y aqui currentuser en post comments?")
 
     return (
        <div>    
             {sortedComments.map((comment)=> (
-            
-                <CommentsWithReplies key={comment.id} onVote={onIncrementVotesHandler} onDownVote={onDecreaseVotesHandler}  onReply={setReplyingTo}  /*onVote={onIncrementVotesReplyHandler} onDownVote={onDecreaseVotesReplyHandler}*/ comment={comment}/>
-            ))
+            <div>
+                <CommentsWithReplies key={comment.id} onVote={onIncrementVotesHandler} onDownVote={onDecreaseVotesHandler}  onReply={setReplyingTo} comment={comment}/>
+  {replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null}
+            </div>
+        ))
             }
-            <NewCommentBox replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/>
+            
         </div>
     )  
 }

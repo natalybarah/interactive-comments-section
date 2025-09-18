@@ -6,21 +6,33 @@
   margin-bottom: 1.6rem;
   border-radius: 2%;
   font-family: "Rubik", sans-serif;
+  max-width: 100%;
+
 }
 
 .replies-wrapper {
-  margin-left: 1.6rem;
+    margin-left: 1.6rem;
+    max-width: calc(100% - 1.6rem);
+    position: relative;
+
+  /* vertical line */
+  &::before {
+    content: "";
+    position: absolute;
+    left: -1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--grey-100) // pick your theme color
+  }
    
 }
-
 
 .user-info-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 1.6rem;
-  
-
     img {
         height: 3.2rem;
         width: 3.2rem;
@@ -36,12 +48,22 @@
         color: var(--grey-800);
         font-weight: 500;
         margin-right: 0.4rem 1.6rem 0rem 0.4rem;
-
+    }
+    .user-badge{
+        font-size: 1.3rem;
+        background-color: var(--purple-600);
+        color: var(--white);
+        height: 1.9rem;
+        width: 3.6rem;
+        display: flex;         
+        justify-content: center;  
+        align-items: center;  
+        border-radius: 0.3rem;
     }
     
 }
 
-p{
+p {
     line-height: 1.5;
 }
 
@@ -52,12 +74,11 @@ p{
     height: 4rem;
     justify-content: space-between;
     align-items: center;
-font-family: "Rubik", sans-serif;
+    font-family: "Rubik", sans-serif;
   
 }
 
 .vote-container {
-    
     display: flex;
     width: 10rem;
     height: 4rem;
@@ -74,14 +95,15 @@ font-family: "Rubik", sans-serif;
         justify-content: center;
         align-items: center;
         background-color: var(--grey-50);
+        cursor: pointer;
         
     }
     span:nth-child(2){
         color: var(--purple-600);
         }
     
-    
 }
+
 .reply-container{
     width: 6.6rem;
     height: 2.4rem;
@@ -103,6 +125,8 @@ font-family: "Rubik", sans-serif;
         background-color: var(--white);
         border-style: none;
         padding: 0;
+        cursor: pointer;
+
     }
 }
 

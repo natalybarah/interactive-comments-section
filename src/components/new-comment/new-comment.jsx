@@ -1,50 +1,37 @@
 import { CommentsContext } from "../../context/comments-context";
-
+import "../new-comment/new-comment.styles.scss"
 
 import { useContext } from "react";
-
-
+import { UserContext } from "../../context/user-context";
 
 const NewCommentBox= ({replyingTo}) => {
-    
-    const {onAddNewComment, onNewCommentChange, commentValues, replyValues, onReplyChange, onAddNewReply, isReplyClick} = useContext(CommentsContext);
-    
-    //const {commentValues}= useState();(
-   // const {content}= commentValues;
-   const onNewCommentAndReplyHandler= (event)=>{
-    if(isReplyClick){
-        onAddNewReply(event, replyingTo)
-    } else onAddNewComment(event)
-   };
 
-    const onCommentAndReplyChange=  (event)=>{
-        if(isReplyClick){
-        onReplyChange(event)} else {
-            onNewCommentChange(event)
-        }
-    }
-
+    console.log(replyingTo, "replying A!")
+    const { commentValues,  isReplyClick, onAddNewItem, onChangeItem} = useContext(CommentsContext);
+    const {currentUserProfile}= useContext(UserContext);
+    
     return(
-        <form onSubmit={onNewCommentAndReplyHandler}>
-                <label>
-                    <input onChange={ onCommentAndReplyChange} name="content" type="text" 
-                    placeholder={isReplyClick ? "You are replying to" : "Add a new comment..."}
-                     value={ isReplyClick ? replyValues.content : commentValues.content} />
+        <div  className="new-box-container">
+        <form  onSubmit={(event)=>onAddNewItem(event, replyingTo)}  >
+                <label className="add-item-input" >
+                    <input required onChange={ onChangeItem} name="content" type="text" 
+                    placeholder={isReplyClick ? `You are replying to ${replyingTo.user.username}` : "Add a comment..."}
+                     value={commentValues.content}  />
                 </label>
-                <button type="submit">Send</button>
+                <div className="add-item-actions">
+                    <span>{currentUserProfile && <img src={require(`../../assets/avatars/${currentUserProfile.image.png}`)} alt=""/>}
+                    </span>
+                    <button type="submit">SEND</button>
+                </div>
         </form>
+        </div>
     )
 }
-//se esta llamado on reply change y on add new reply, añade el reply duplicado al final de cada comment y despues de su reply existente
-//necesito añadir algo para verificar a donde se respondio y a que comment unico deberia agregarse
-//al agregar nuevo comment SI LLAMA onNewCommentChange pero no llama onAddNewComment, porque? y en vez llama a a onAddNewReply
+
 export default NewCommentBox;
-//cuando se da click aqui deberia actualizar hacer los submit de form 
-//para actualizar los nuevos comments array
 
 
-
-
+ 
 
 
 

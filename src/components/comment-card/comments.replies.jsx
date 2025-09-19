@@ -22,7 +22,7 @@ const CommentsWithReplies= ({comment})=>{// este es comment del map
             {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
                 </div>
                 {/*isReplyClick? <NewCommentBox  /> : null*/ }
-                {isReplyClick && replyingTo ? <NewCommentBox replyingTo={replyingTo} onCancelReply={()=>setReplyingTo(null)} /> : null }
+                {isReplyClick && replyingTo ? <NewCommentBox replyingTo={replyingTo} /*onCancelReply={()=>setReplyingTo(null)}*/ /> : null }
               
             {
                 comment.replies && comment.replies.length > 0 && (

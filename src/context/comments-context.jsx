@@ -139,7 +139,6 @@ const onDeleteItem=(targetComment)=>{
 
 const onChangeItem= (event)=>{
     event.preventDefault();
-    setReplyClick(false);
     const {name, value}= event.target                                                         
     let maxId=0;
 
@@ -162,7 +161,7 @@ const onChangeItem= (event)=>{
 
 const onAddNewItem=(event, replyingTo)=>{
     event.preventDefault();
-    setReplyClick(false);
+   // setReplyClick(false);
     if(replyingTo=== null){
         const newCommentsArray= [...commentsArray, commentValues];
         setComments(newCommentsArray);

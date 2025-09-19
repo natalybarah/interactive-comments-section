@@ -10,7 +10,7 @@ const PostComments= () =>{
     
     const {commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler}= useContext(CommentsContext);
     const { currentUserProfile, setCurrentUserProfile} = useContext(UserContext);
-    const [replyingTo, setReplyingTo]= useState(null);
+    //const [replyingTo, setReplyingTo]= useState(null);
     const { setComments} = useContext(CommentsContext)
 
     const {comments, currentUser}=rawData
@@ -40,8 +40,8 @@ const PostComments= () =>{
        <div>    
             {sortedComments.map((comment)=> (
             <div>
-                <CommentsWithReplies key={comment.id} onVote={onIncrementVotesHandler} onDownVote={onDecreaseVotesHandler}  onReply={setReplyingTo} comment={comment}/>
-  {replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null}
+                <CommentsWithReplies key={comment.id} onVote={onIncrementVotesHandler} onDownVote={onDecreaseVotesHandler}  /*onReply={setReplyingTo}*/ comment={comment}/>
+  {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
             </div>
         ))
             }

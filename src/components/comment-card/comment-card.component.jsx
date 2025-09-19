@@ -9,9 +9,9 @@ import EditIcon from "../../assets/icons/icon-edit.svg";
 
 const CommentCard= ({comment, onReply})=> {
 
-const {  onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick, onDeleteItem}= useContext(CommentsContext);
+const { onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick, onDeleteItem}= useContext(CommentsContext);
 const {currentUserProfile}= useContext(UserContext);
-
+//console.log(replyingTo, "replyingTo en commentCard")
     return(
          <div>
             <div key={comment.id} className="comment-container">

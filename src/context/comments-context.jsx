@@ -138,7 +138,8 @@ const onDeleteItem=(targetComment)=>{
 // # NEW ITEMS
 
 const onChangeItem= (event)=>{
-    event.preventDefault()
+    event.preventDefault();
+    setReplyClick(false);
     const {name, value}= event.target                                                         
     let maxId=0;
 

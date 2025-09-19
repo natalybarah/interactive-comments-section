@@ -157,15 +157,18 @@ const onChangeItem= (event)=>{
     }
     generateNewId()
     setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
+    console.log("finalize onchangeitem", commentValues)
 }   
 
 const onAddNewItem=(event, replyingTo)=>{
     event.preventDefault();
    // setReplyClick(false);
     if(replyingTo=== null){
+        console.log("entro a onaddnewitem")
         const newCommentsArray= [...commentsArray, commentValues];
         setComments(newCommentsArray);
         setCommentValues(defaultCommentValues);
+
     }
 
     if(replyingTo){
@@ -189,6 +192,7 @@ const onAddNewItem=(event, replyingTo)=>{
         const newCommentsArray= findSelectedComment(commentsArray);
         setComments(newCommentsArray);
         setCommentValues(defaultCommentValues);
+        setReplyClick(false);
         console.log("comments array actual", commentsArray)
     }
 } 

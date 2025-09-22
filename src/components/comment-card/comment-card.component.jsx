@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { CommentsContext } from "../../context/comments-context";
 import { UserContext } from "../../context/user-context";
 import MinusIcon from '../../assets/icons/icon-minus.svg';
@@ -7,14 +7,16 @@ import PlusIcon from "../../assets/icons/icon-plus.svg";
 import DeleteIcon from "./../../assets/icons/icon-delete.svg";
 import EditIcon from "../../assets/icons/icon-edit.svg";
 
-const CommentCard= ({comment, onReply})=> {
+const CommentCard= ({comment, onReply, setRef})=> {
 
 const { onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick, onDeleteItem}= useContext(CommentsContext);
 const {currentUserProfile}= useContext(UserContext);
+
+
 //console.log(replyingTo, "replyingTo en commentCard")
     return(
          <div>
-            <div key={comment.id} className="comment-container">
+            <div ref={setRef} key={comment.id} className="comment-container">
                             <div className="user-info-container">`
                                 <img src={require(`../../assets/avatars/${comment.user.image.png}`)} alt=""/> 
                                     <div className="user-info">
@@ -48,7 +50,7 @@ const {currentUserProfile}= useContext(UserContext);
                                 </div>
                                 : <div className="reply-container">
                                     <img src={ReplyIcon} alt=""/>
-                                    <span  onClick={()=>{ onReply(); setReplyClick(true)}}   >Reply</span>
+                                    <span  onClick={()=>{onReply(comment); setReplyClick(true)}}>Reply</span>
                                 </div>
                             }
                             

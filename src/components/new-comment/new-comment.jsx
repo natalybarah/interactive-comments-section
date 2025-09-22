@@ -4,14 +4,15 @@ import "../new-comment/new-comment.styles.scss"
 import { useContext } from "react";
 import { UserContext } from "../../context/user-context";
 
-const NewCommentBox= ({replyingTo}) => {
+const NewCommentBox= ({replyingTo, offSet}) => {
 
+ 
     console.log(replyingTo, "replying A!")
     const { commentValues,  isReplyClick, onAddNewItem, onChangeItem} = useContext(CommentsContext);
     const {currentUserProfile}= useContext(UserContext);
     
     return(
-        <div  className="new-box-container">
+        <div  className="new-box-container" style={{bottom: replyingTo ?  `${offSet}px` : "1.6rem " }}>
         <form  onSubmit={(event)=>onAddNewItem(event, replyingTo)}  >
                 <label className="add-item-input" >
                     <input required onChange={ onChangeItem} name="content" type="text" 

@@ -12,7 +12,7 @@ const NewCommentBox= ({replyingTo, offSet}) => {
     const {currentUserProfile}= useContext(UserContext);
     
     return(
-        <div  className="new-box-container" style={{bottom: replyingTo ?  `${offSet}px` : "1.6rem " }}>
+        <div  className="new-box-container" /*style={{bottom: replyingTo ?  `${offSet}px` : "1.6rem " }*}*/>
         <form  onSubmit={(event)=>onAddNewItem(event, replyingTo)}  >
                 <label className="add-item-input" >
                     <input required onChange={ onChangeItem} name="content" type="text" 

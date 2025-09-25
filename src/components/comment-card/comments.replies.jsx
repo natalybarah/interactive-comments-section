@@ -6,7 +6,7 @@ import { CommentsContext } from "../../context/comments-context";
 import NewCommentBox from "../new-comment/new-comment";
 
 
-const CommentsWithReplies= ({comment, onReply, setRef})=>{// este es comment del map
+const CommentsWithReplies= ({comment, onReply, setRef, getSetRef})=>{// este es comment del map
 
     const {currentUserProfile}=useContext(UserContext);
     const {isReplyClick, setReplyClick}= useContext(CommentsContext);
@@ -27,7 +27,7 @@ const CommentsWithReplies= ({comment, onReply, setRef})=>{// este es comment del
                 comment.replies && comment.replies.length > 0 && (
                     <div className="replies-wrapper">
                         {comment.replies.map(reply=>(
-                            <CommentsWithReplies key={reply.id}   comment={reply} onReply={onReply} setRef={setRef(reply.id)}/>
+                            <CommentsWithReplies key={reply.id}   comment={reply} onReply={onReply} getSetRef={getSetRef} setRef={getSetRef(reply.id)}/>
                         ))}
                     </div>
                 )

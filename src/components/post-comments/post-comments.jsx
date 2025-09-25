@@ -34,26 +34,23 @@ const PostComments= () =>{
         return b.score-a.score
     }
     
-    const sortedComments= commentsArray.sort(compare)
-
-
-    const handleReply=(comment)=>{
-        const element= commentRefs.current[comment.id];
-        if(!element) return;
-
-        console.log(comment, "COMMENT HANDLE REPLY")
-        const rect= element.getBoundingClientRect();
-        console.log(element, "REF OBJECT POSITION");
-        const distanceToUse= window.innerHeight- rect.bottom;
-        setOffSet(distanceToUse)
-        setReplyingTo(comment)
-        console.log(distanceToUse, "OFFSET!!!")
-    }
-
-    const getSetRef= (id) => (el) => {
+   
+  const getSetRef= (id) => (el) => {
         if (el) commentRefs.current[id]= el;
         else delete commentRefs.current[id];
     }
+
+    const handleReply=(comment)=>{
+        setReplyingTo(comment)
+        const element= commentRefs.current[comment.id];
+        if(!element) return;
+        const rect= element.getBoundingClientRect();
+        console.log(element, "REF OBJECT POSITION");
+        const offSet= rect.top -16;
+        window.scrollBy(0, offSet);
+    }
+
+   const sortedComments= commentsArray.sort(compare)
 
 
     return (
@@ -67,12 +64,13 @@ const PostComments= () =>{
                     onReply={handleReply} 
                     comment={comment}
                     setRef={getSetRef(comment.id)}
+                    getSetRef={getSetRef}
 
                 />
   {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
                 </div>
             ))}
-           <NewCommentBox offSet={offSet} replyingTo={replyingTo} onCancelReply={()=>setReplyingTo(null)}/>
+           <NewCommentBox offSet={offSet} replyingTo={replyingTo} /*onCancelReply={()=>setReplyingTo(null)}*//>
         </div>
         )
 }

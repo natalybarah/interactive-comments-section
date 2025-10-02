@@ -8,15 +8,17 @@ import CommentsWithReplies from '../comment-card/comments.replies';
 
 const PostComments= () =>{
     
-    const {commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler}= useContext(CommentsContext);
+    const {commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler, toggleEdit, setToggleEdit}= useContext(CommentsContext);
     const { currentUserProfile, setCurrentUserProfile} = useContext(UserContext);
     const [replyingTo, setReplyingTo]= useState(null);
-    const [offSet, setOffSet] = useState(0);
+    //const [offSet, setOffSet] = useState(0);
     const { setComments} = useContext(CommentsContext)
     const {isReplyClick}= useContext(CommentsContext);
-    const {comments, currentUser}=rawData
-    const commentRefs= useRef({})
+    const {comments, currentUser}=rawData;
+    const commentRefs= useRef({});
+    const [editingCommentId, setEditingCommentId]= useState(null);
 
+    console.log(toggleEdit, "TOGGLE EDIT EN POST")
     useEffect(
         ()=>{
         setComments(comments)
@@ -45,8 +47,7 @@ const PostComments= () =>{
         const element= commentRefs.current[comment.id];
         if(!element) return;
         const rect= element.getBoundingClientRect();
-        console.log(element, "REF OBJECT POSITION");
-        const offSet= rect.top -16;
+        const offSet= rect.top-16; 
         window.scrollBy(0, offSet);
     }
 
@@ -54,7 +55,7 @@ const PostComments= () =>{
 
 
     return (
-       <div>    
+       <div className="post-comments-container">    
             {sortedComments.map((comment)=>  (
                 <div>
                 <CommentsWithReplies 
@@ -65,12 +66,17 @@ const PostComments= () =>{
                     comment={comment}
                     setRef={getSetRef(comment.id)}
                     getSetRef={getSetRef}
+                    editingCommentId={editingCommentId}
+                    setEditingCommentId={setEditingCommentId}
 
                 />
   {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
                 </div>
             ))}
-           <NewCommentBox offSet={offSet} replyingTo={replyingTo} /*onCancelReply={()=>setReplyingTo(null)}*//>
+            {   !editingCommentId && (
+                 <NewCommentBox replyingTo={replyingTo} onCancelReply={()=>setReplyingTo(null)}/>
+            )
+            }
         </div>
         )
 }

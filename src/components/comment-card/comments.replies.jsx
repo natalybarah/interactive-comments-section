@@ -6,7 +6,7 @@ import { CommentsContext } from "../../context/comments-context";
 import NewCommentBox from "../new-comment/new-comment";
 
 
-const CommentsWithReplies= ({comment, onReply, setRef, getSetRef})=>{// este es comment del map
+const CommentsWithReplies= ({comment, onReply, setRef, getSetRef, editingCommentId, setEditingCommentId})=>{// este es comment del map
 
     const {currentUserProfile}=useContext(UserContext);
     const {isReplyClick, setReplyClick}= useContext(CommentsContext);
@@ -17,7 +17,7 @@ const CommentsWithReplies= ({comment, onReply, setRef, getSetRef})=>{// este es 
     return(
         <div className="comment-thread">
             <div className= "comment-card-wrapper">
-            <CommentCard comment={comment} onReply={()=> onReply(comment)} setRef={setRef}  />
+            <CommentCard comment={comment} onReply={()=> onReply(comment)} setRef={setRef} editingCommentId={editingCommentId} setEditingCommentId={setEditingCommentId}  />
             {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
                 </div>
                 {/*isReplyClick? <NewCommentBox  /> : null*/ }
@@ -27,7 +27,7 @@ const CommentsWithReplies= ({comment, onReply, setRef, getSetRef})=>{// este es 
                 comment.replies && comment.replies.length > 0 && (
                     <div className="replies-wrapper">
                         {comment.replies.map(reply=>(
-                            <CommentsWithReplies key={reply.id}   comment={reply} onReply={onReply} getSetRef={getSetRef} setRef={getSetRef(reply.id)}/>
+                            <CommentsWithReplies key={reply.id}   comment={reply} onReply={onReply} getSetRef={getSetRef} setRef={getSetRef(reply.id)} editingCommentId={editingCommentId} setEditingCommentId={setEditingCommentId}/>
                         ))}
                     </div>
                 )

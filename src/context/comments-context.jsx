@@ -54,6 +54,7 @@ const defaultCommentValues={
         user: {}
     }
 
+
 const formatRelativeTime= (date)=> {
         const now = new Date();
         const secondsAgo = Math.round((now - date) / 1000);
@@ -89,7 +90,8 @@ export const CommentsProvider= ({children})=>{
     const [commentsArray, setComments]= useState([]);
     const [commentValues, setCommentValues]=useState(defaultCommentValues);
     const [isReplyClick, setReplyClick]=useState(false);
-
+    const [editContent, setEditContent]= useState("");
+    
     useCallback(formatRelativeTime, [])
     
     const onIncrementVotesHandler= (selectedVoteComment)=>{
@@ -139,7 +141,8 @@ const onDeleteItem=(targetComment)=>{
 
 const onChangeItem= (event)=>{
     event.preventDefault();
-    const {name, value}= event.target                                                         
+    const {name, value}= event.target 
+    console.log("changeItemCall, VALUE:", value)                                                        
     let maxId=0;
 
     const generateNewId=()=>{
@@ -147,43 +150,67 @@ const onChangeItem= (event)=>{
           items.forEach((item)=>{
              
                 if(item.id > maxId) maxId= item.id;
-                console.log(item.id, "ITEM-ID")
+               // console.log(item.id, "ITEM-ID")
                 if(item.replies && item.replies.length > 0)  findMaxId(item.replies)
-                console.log(item.replies, "ITEM-REPLIES")
+                //console.log(item.replies, "ITEM-REPLIES")
             }) 
         } 
         findMaxId(commentsArray);
+        console.log("returned MAX ID", maxId)
         return maxId
     }
     generateNewId()
+    
     setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
-    console.log("finalize onchangeitem", commentValues)
+    console.log("finalize commentVALUES", commentValues)
 }   
 
-const onAddNewItem=(event, replyingTo)=>{
+const onChangeEditItem=(event)=>{
     event.preventDefault();
-   // setReplyClick(false);
+    const {value}= event.target;
+    setCommentValues((prev)=>{return {...prev, content: value}})
+
+}
+
+const onUpdateItem=(targetComment)=>{
+    const updatedItems=(items)=>{
+        return items.map((item)=>{
+            if(item.id ===targetComment.id) {
+                return {...item, content: commentValues.content}
+            } 
+            if(item.replies && item.replies.length > 0){
+                return {...item, replies: updatedItems(item.replies)}
+            }
+            return item
+        })
+     
+    }
+
+    const result= updatedItems(commentsArray)
+    console.log("result:", result)
+    setComments(result)
+    setCommentValues(defaultCommentValues);
+}
+
+const onAddNewItem=(event, replyingTo, onCancelReply)=>{
+    event.preventDefault();
     if(replyingTo=== null){
-        console.log("entro a onaddnewitem")
         const newCommentsArray= [...commentsArray, commentValues];
         setComments(newCommentsArray);
         setCommentValues(defaultCommentValues);
-
+       
     }
 
     if(replyingTo){
         const findSelectedComment= (items)=>{
             return items.map(item=>{
                 if(item.id===replyingTo.id){
-                    console.log("item de map", item )
-                    console.log("id de replying to en map", replyingTo.id)
                   return  {...item, replies: [...item.replies, commentValues]}
                 }          
             
                 if(item.replies && item.replies.length > 0){
                    item.replies= findSelectedComment(item.replies)
                 }
-                // We now return the parent item that has updated replies
                   return item
                  
             }
@@ -193,11 +220,26 @@ const onAddNewItem=(event, replyingTo)=>{
         setComments(newCommentsArray);
         setCommentValues(defaultCommentValues);
         setReplyClick(false);
-        console.log("comments array actual", commentsArray)
+        onCancelReply(null)
+      //  replyingTo= null;
+        console.log("replyingTo in context:", replyingTo)
     }
 } 
 
-    const value= {commentsArray, isReplyClick, setReplyClick, setComments,  onIncrementVotesHandler,onDecreaseVotesHandler, commentValues, onDeleteItem, onAddNewItem, onChangeItem}
+    const value= {  commentsArray, 
+                    isReplyClick, 
+                    setReplyClick, 
+                    setComments,  
+                    onIncrementVotesHandler,
+                    onDecreaseVotesHandler, 
+                    commentValues, 
+                    onDeleteItem, 
+                    onAddNewItem, 
+                    onChangeItem, 
+                    onChangeEditItem,
+                    onUpdateItem,
+              
+    }
     return <CommentsContext value={value}>{children}</CommentsContext>
 
 }

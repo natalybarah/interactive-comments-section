@@ -1,22 +1,23 @@
   .new-box-container {
-    position: fixed;
-    bottom: 1.6rem;
+    position: sticky;
+    bottom: 0;
     left: 1.6rem;
     right: 1.6rem;
-    z-index: 1000;
-    margin:0 auto;
+    margin:0;
+    margin-bottom: 0;
     display: flex;
     background-color: var(--white);
     padding: 1.6rem;
     border-radius: 2%;
     font-family: "Rubik", sans-serif;
     max-width: 730px;
-    transform: translateY(50%);
-    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    //transform: translateY(50%);
+   // transition: transform 0.3s ease-in-out;
     
-    &:active{
-      transform: translateY(0%);
-    }
+   // &:active{
+     // transform: translateY(0%);
+   // }
 
     form{
       width: 100%;
@@ -75,10 +76,11 @@
         align-items: center;
         background-color: var(--purple-600);
         color: var(--white);
-        min-width: 6.5rem;
-        min-height: 3rem;
+        min-width: 10.4rem;
+        min-height: 4.8rem;
         border-radius: .5rem;
         margin-right: 0;
+        cursor: pointer;
 
         &:hover{
           background-color: var(--purple-200);

@@ -1,16 +1,22 @@
-import { useContext, useRef } from "react";
+import { useContext, useState } from "react";
 import { CommentsContext } from "../../context/comments-context";
 import { UserContext } from "../../context/user-context";
+import "../comment-card/comment-card.styles.scss";
 import MinusIcon from '../../assets/icons/icon-minus.svg';
 import ReplyIcon from '../../assets/icons/icon-reply.svg';
 import PlusIcon from "../../assets/icons/icon-plus.svg";
 import DeleteIcon from "./../../assets/icons/icon-delete.svg";
 import EditIcon from "../../assets/icons/icon-edit.svg";
+import Modal from "../modals/modal";
 
-const CommentCard= ({comment, onReply, setRef})=> {
+const CommentCard= ({comment, onReply, setRef, editingCommentId, setEditingCommentId})=> {
 
-const { onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick, onDeleteItem}= useContext(CommentsContext);
+const { onIncrementVotesHandler, onDecreaseVotesHandler, setReplyClick, onDeleteItem, onChangeEditItem, commentValues, setCommentValues, onUpdateItem}= useContext(CommentsContext);
 const {currentUserProfile}= useContext(UserContext);
+const [toggleDelete, setToggleDelete]= useState(false);
+const [editContent, setEditContent]= useState(comment.content);
+const isEditing= editingCommentId === comment.id;
+
 
 
 //console.log(replyingTo, "replyingTo en commentCard")
@@ -27,33 +33,51 @@ const {currentUserProfile}= useContext(UserContext);
                                         <span>{comment.createdAt}</span>
                                     </div>
                             </div>
-                            <p>{comment.content}</p>
+                            {/* se debe volver un input form aqui condicional*/}
+                      {isEditing ? (
+                                <form >
+                                    <label>
+                                        <textarea className="edit-textarea"  required onChange={(event)=>{onChangeEditItem(event); setEditContent(event.target.value)}} name="content" type="text" value={editContent}
+                                        />
+                                    </label>
+                                </form>
+                          ) :(     
+                            <p>{comment.content}</p>)
+                        }
                     <div className="comments-actions">
+                       
                             <div className="vote-container">
                                 <button   onClick={()=> onIncrementVotesHandler(comment)} ><img src={PlusIcon} alt="minus"/></button>
                                 <span>{comment.score}</span>
                                 <button onClick={()=> onDecreaseVotesHandler(comment)}><img src={MinusIcon} alt="minus"/></button>
                             </div>
-                            { currentUserProfile.username === comment.user.username ? 
+                     {isEditing ? (       
+                        <div onClick={()=>{onUpdateItem(comment); setEditingCommentId(null)}} className="update-container">
+                                    <button>UPDATE</button> 
+                                </div>
+                     ) :
+                            currentUserProfile.username === comment.user.username  ? (
                                 
-                                <div className="action-buttons" onClick={()=> onDeleteItem(comment)} >
-                                    <button>
+                                <div className="action-buttons">
+                                    
+                                    <button onClick={()=>setToggleDelete(true)}>
                                         <img alt="delete" src={DeleteIcon}/>
                                         <span className="delete-label">Delete</span>
                                     </button>
                                     
-                                    <button>
+                                    <button onClick={()=> setEditingCommentId(comment.id)}>
                                         <img alt="edit" src={EditIcon}/>
                                         <span className="edit-label">Edit</span>
                                     </button>
-
-                                </div>
-                                : <div className="reply-container">
+                                </div>)
+                                : (<div className="reply-container">
                                     <img src={ReplyIcon} alt=""/>
                                     <span  onClick={()=>{onReply(comment); setReplyClick(true)}}>Reply</span>
-                                </div>
+                                </div>)}
+                            {
+                               toggleDelete ?  <Modal setToggleDelete={setToggleDelete}  comment={comment} onDeleteItem={onDeleteItem}/> : null
                             }
-                            
+                      
                     </div> 
                 </div>
                 <div>

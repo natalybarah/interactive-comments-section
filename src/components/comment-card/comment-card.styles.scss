@@ -1,35 +1,33 @@
 
-    form{
-      width: 100%;
-      margin-bottom: 1.6rem;
-    }
+form{
+  width: 100%;
+  margin-bottom: 1.6rem;
+}
 
-   .edit-textarea{
-    min-height: 9.6rem;
-    width: 100%;
-    flex: 1;
-    border: 1px solid var(--grey-100);
-    border-radius: .5rem;
-    font-size: 1.6rem;
-    padding: 0.5rem 1rem;
-    font-family: inherit;
-    resize: none;
-    color: inherit;
-    overflow: hidden;
+.edit-textarea{
+min-height: 9.6rem;
+width: 100%;
+flex: 1;
+border: 1px solid var(--grey-100);
+border-radius: .5rem;
+font-size: 1.6rem;
+padding: 0.5rem 1rem;
+font-family: inherit;
+resize: none;
+color: inherit;
+overflow: hidden;
 
-    &:hover{
-      //outline: none;
-      border-color: var(--purple-600);
-   //   outline: none;
+  &:hover{
+    border-color: var(--purple-600);
+  }
 
-    }
-    &:focus{
-      outline: none;
-      border-color: var(--purple-600);
-    }
-      &::placeholder{
-        //color: red
+  &:focus{
+    outline: none;
+    border-color: var(--purple-600);
+  }
 
-        text-align: start;
-      }
-    }
+  &::placeholder{
+    text-align: start;
+  }
+  
+}

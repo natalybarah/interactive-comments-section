@@ -2,48 +2,13 @@ import { createContext, useState, useContext, useCallback} from "react";
 import { UserContext } from "./user-context";
 
 export const CommentsContext= createContext({
-    commentsArray: [],
-    setComments: ()=>null, 
-    onIncrementVotesHandler: ()=> {},
-    onDecreaseVotesHandler: ()=> {},
-    onNewCommentChangeHandler: () => {},
+    commentTree: [],
+    setCommentTree: ()=>null, 
+    commentValues: {},
+    setCommentValues: ()=> {},
+    isReplyClick: false,
 
 });
-
-// # VOTES COUNTER
-
-export const onIncrementVotes= (selectedVoteComment, commentsArray )=>{
-    
-        const updateItems= (items)=>{
-           return items.map(item=>{
-                if(item.id === selectedVoteComment.id){
-                    return {...item, score: item.score + 1}
-                }
-                if(item.replies && item.replies.length > 0){
-                    item.replies= updateItems(item.replies)
-                }
-                return item
-            })
-        }
-      return  updateItems(commentsArray);
-
-};
-
-export const onDecreaseVotes= (selectedVoteComment, commentsArray)=>{
-
-        const updateItems= (items)=> {
-            return items.map(item=> {
-                if(item.id === selectedVoteComment.id && item.score > 0){
-                    return {...item, score: item.score -1}
-                }
-                if(item.replies && item.replies.length > 0){
-                    item.replies= updateItems(item.replies)
-                }
-                return item;
-                })
-            }
-        return updateItems(commentsArray)
-    }
 
 const defaultCommentValues={
         content: "",
@@ -54,7 +19,31 @@ const defaultCommentValues={
         user: {}
     }
 
+// # VOTES COUNTER
 
+export const voteManager= (items, targetComment, userId, direction)=>{
+
+    return items.map(item=>{
+        if(item.id === targetComment.id){
+            const userVotes = item.userVotes ?? {};
+            const oldVote = userVotes[userId] ?? 0;
+            const newVote= direction === "up" ? ( oldVote === 1 ? 0 : 1) : ( oldVote === -1 ? 0 : -1);
+            const delta = newVote - oldVote;
+                
+                return {...item, score: item.score + delta, userVotes: {...userVotes, [userId]: newVote}}
+        }
+                
+        if(item.replies?.length){
+            const newReplies= voteManager(item.replies, targetComment, userId, direction);
+            if(item.replies !== newReplies) {
+                return {...item, replies: newReplies}
+            }
+        }
+            return item
+    })
+                
+};
+                    
 const formatRelativeTime= (date)=> {
         const now = new Date();
         const secondsAgo = Math.round((now - date) / 1000);
@@ -87,62 +76,59 @@ const formatRelativeTime= (date)=> {
 
 export const CommentsProvider= ({children})=>{
     const {currentUserProfile} = useContext(UserContext)
-    const [commentsArray, setComments]= useState([]);
+    const [commentTree, setCommentTree]= useState([]);
     const [commentValues, setCommentValues]=useState(defaultCommentValues);
     const [isReplyClick, setReplyClick]=useState(false);
-    const [editContent, setEditContent]= useState("");
-    
+
     useCallback(formatRelativeTime, [])
-    
-    const onIncrementVotesHandler= (selectedVoteComment)=>{
-        setComments(onIncrementVotes(selectedVoteComment, commentsArray))
+     
+    const upVote= (targetComment, userId)=>{
+        setCommentTree(prev=> voteManager(prev, targetComment, userId, "up"))
     }
- 
-    const onDecreaseVotesHandler= (selectedVoteComment) => {
-        setComments(onDecreaseVotes(selectedVoteComment, commentsArray))
+
+    const downVote= (targetComment, userId) =>{
+        setCommentTree(prev=> voteManager(prev, targetComment, userId, "down"))
     }
-    
 
 // # DELETE ITEMS
 const onDeleteItem=(targetComment)=>{
 
-    const findSelectedComment= (targetComment, commentsArray)=>{
+    const findSelectedComment= (targetComment, commentTree)=>{
         let i=0;
-        for(i; i< commentsArray.length; i++ ){
-            if(commentsArray[i].id=== targetComment.id){
+        for(i; i< commentTree.length; i++ ){
+            if(commentTree[i].id=== targetComment.id){
             
-                return commentsArray[i]
+                return commentTree[i]
             }
-            if (commentsArray[i].replies && commentsArray[i].replies.length > 0){
-                const theFound= findSelectedComment(targetComment, commentsArray[i].replies);
-                if(theFound) return theFound
+            if (commentTree[i].replies && commentTree[i].replies.length > 0){
+                const found= findSelectedComment(targetComment, commentTree[i].replies);
+                if(found) return found
             }
         }
         return false
     }
-    const matchComment= findSelectedComment(targetComment, commentsArray);
+    const matchComment= findSelectedComment(targetComment, commentTree);
 
-    const newCommentsArray= (items)=>{  
+    const newCommentTree= (items)=>{  
      return   items.filter((item) =>  {
       if(  item.id === matchComment.id) {
         return false;
       }
       if(item.replies && item.replies.length > 0){
-        item.replies= newCommentsArray(item.replies); 
+        item.replies= newCommentTree(item.replies); 
       } 
         return true;
         })
     }
-    const result= newCommentsArray(commentsArray)
-    setComments(result )
+    const result= newCommentTree(commentTree)
+    setCommentTree(result )
 }
 
 // # NEW ITEMS
 
 const onChangeItem= (event)=>{
     event.preventDefault();
-    const {name, value}= event.target 
-    console.log("changeItemCall, VALUE:", value)                                                        
+    const {name, value}= event.target                                                 
     let maxId=0;
 
     const generateNewId=()=>{
@@ -150,26 +136,20 @@ const onChangeItem= (event)=>{
           items.forEach((item)=>{
              
                 if(item.id > maxId) maxId= item.id;
-               // console.log(item.id, "ITEM-ID")
                 if(item.replies && item.replies.length > 0)  findMaxId(item.replies)
-                //console.log(item.replies, "ITEM-REPLIES")
             }) 
         } 
-        findMaxId(commentsArray);
-        console.log("returned MAX ID", maxId)
+        findMaxId(commentTree);
         return maxId
     }
     generateNewId()
-    
     setCommentValues({...commentValues, [name]: value, user: currentUserProfile, createdAt: createdAtTime, score: 0, id: maxId + 1})
-    console.log("finalize commentVALUES", commentValues)
 }   
 
 const onChangeEditItem=(event)=>{
     event.preventDefault();
     const {value}= event.target;
     setCommentValues((prev)=>{return {...prev, content: value}})
-
 }
 
 const onUpdateItem=(targetComment)=>{
@@ -186,19 +166,18 @@ const onUpdateItem=(targetComment)=>{
      
     }
 
-    const result= updatedItems(commentsArray)
-    console.log("result:", result)
-    setComments(result)
+    const result= updatedItems(commentTree)
+    setCommentTree(result)
     setCommentValues(defaultCommentValues);
 }
 
 const onAddNewItem=(event, replyingTo, onCancelReply)=>{
     event.preventDefault();
+    
     if(replyingTo=== null){
-        const newCommentsArray= [...commentsArray, commentValues];
-        setComments(newCommentsArray);
-        setCommentValues(defaultCommentValues);
-       
+        const newCommentTree= [...commentTree, commentValues];
+        setCommentTree(newCommentTree);
+        setCommentValues(defaultCommentValues);   
     }
 
     if(replyingTo){
@@ -207,39 +186,37 @@ const onAddNewItem=(event, replyingTo, onCancelReply)=>{
                 if(item.id===replyingTo.id){
                   return  {...item, replies: [...item.replies, commentValues]}
                 }          
-            
                 if(item.replies && item.replies.length > 0){
                    item.replies= findSelectedComment(item.replies)
                 }
                   return item
-                 
             }
             )
         }
-        const newCommentsArray= findSelectedComment(commentsArray);
-        setComments(newCommentsArray);
+
+        const newCommentTree= findSelectedComment(commentTree);
+        setCommentTree(newCommentTree);
         setCommentValues(defaultCommentValues);
         setReplyClick(false);
-        onCancelReply(null)
-      //  replyingTo= null;
-        console.log("replyingTo in context:", replyingTo)
+        onCancelReply(null);
+        
     }
 } 
 
-    const value= {  commentsArray, 
+    const value= {  commentTree, 
                     isReplyClick, 
                     setReplyClick, 
-                    setComments,  
-                    onIncrementVotesHandler,
-                    onDecreaseVotesHandler, 
+                    setCommentTree,  
                     commentValues, 
                     onDeleteItem, 
                     onAddNewItem, 
                     onChangeItem, 
                     onChangeEditItem,
                     onUpdateItem,
-              
+                    upVote,
+                    downVote
     }
+
     return <CommentsContext value={value}>{children}</CommentsContext>
 
 }

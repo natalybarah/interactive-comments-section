@@ -8,58 +8,41 @@ import CommentsWithReplies from '../comment-card/comments.replies';
 
 const PostComments= () =>{
     
-    const {commentsArray,onIncrementVotesHandler, onDecreaseVotesHandler, toggleEdit, setToggleEdit}= useContext(CommentsContext);
-    const { currentUserProfile, setCurrentUserProfile} = useContext(UserContext);
+    const {commentTree, onIncrementVotesHandler, onDecreaseVotesHandler}= useContext(CommentsContext);
+    const { setCurrentUserProfile} = useContext(UserContext);
     const [replyingTo, setReplyingTo]= useState(null);
-    //const [offSet, setOffSet] = useState(0);
-    const { setComments} = useContext(CommentsContext)
-    const {isReplyClick}= useContext(CommentsContext);
-    const {comments, currentUser}=rawData;
-    const commentRefs= useRef({});
+    const { setCommentTree} = useContext(CommentsContext)
     const [editingCommentId, setEditingCommentId]= useState(null);
-
-    console.log(toggleEdit, "TOGGLE EDIT EN POST")
-    useEffect(
-        ()=>{
-        setComments(comments)
-    }, [setComments, comments]
-    );
-
-    useEffect(
-        ()=>{
-        setCurrentUserProfile(currentUser)
-    }, []);
-
-
-    //const commentsToSort=[...commentsArray];
-    const compare=(a, b)=>{
-        return b.score-a.score
-    }
+    const {comments, currentUser}=rawData;
     
-   
-  const getSetRef= (id) => (el) => {
+    const commentRefs= useRef({});
+     
+    const getSetRef= (id) => (el) => {
         if (el) commentRefs.current[id]= el;
         else delete commentRefs.current[id];
     }
+   
 
-    const handleReply=(comment)=>{
-        setReplyingTo(comment)
-        const element= commentRefs.current[comment.id];
-        if(!element) return;
-        const rect= element.getBoundingClientRect();
-        const offSet= rect.top-16; 
-        window.scrollBy(0, offSet);
-    }
+    useEffect( ()=>{ setCommentTree(comments)}, [setCommentTree, comments]);
+    useEffect(()=>{setCurrentUserProfile(currentUser)}, []);
 
-   const sortedComments= commentsArray.sort(compare)
+    const compare=(a, b)=> b.score-a.score
+    const sortedComments = [...commentTree].sort(compare);
+ 
+  
+  const handleReply = (comment) => {
+      setReplyingTo(comment);
+      const el = commentRefs.current[comment.id];
+      el?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    };
 
+    const cancelReply = () => setReplyingTo(null);
 
     return (
        <div className="post-comments-container">    
             {sortedComments.map((comment)=>  (
-                <div>
+                <div key={comment.id}>
                 <CommentsWithReplies 
-                    key={comment.id} 
                     onVote={onIncrementVotesHandler} 
                     onDownVote={onDecreaseVotesHandler}  
                     onReply={handleReply} 
@@ -68,13 +51,14 @@ const PostComments= () =>{
                     getSetRef={getSetRef}
                     editingCommentId={editingCommentId}
                     setEditingCommentId={setEditingCommentId}
+                    replyingTo={replyingTo}
+                    onCancelReply={cancelReply}
 
                 />
-  {/*replyingTo && replyingTo.id===comment.id ?        <NewCommentBox  replyingTo={replyingTo} onCancelReply={()=>{setReplyingTo(null)}}/> : null*/}
                 </div>
             ))}
-            {   !editingCommentId && (
-                 <NewCommentBox replyingTo={replyingTo} onCancelReply={()=>setReplyingTo(null)}/>
+            {   !editingCommentId &&  !replyingTo && (
+                 <NewCommentBox  replyingTo={replyingTo} onCancelReply={cancelReply} />
             )
             }
         </div>

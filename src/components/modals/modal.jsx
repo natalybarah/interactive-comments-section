@@ -10,8 +10,8 @@ const Modal= ({comment, setToggleDelete, onDeleteItem})=>{
                 <div className="modal-mask">
                     <div className="delete-comment-container">
                         <div className="delete-comment-content">
-                        <h1>Delete Comment</h1>
-                        <p>Are you sure you want to delete this comment? This will remove the comment and can't be undone.</p>
+                            <h1>Delete Comment</h1>
+                            <p>Are you sure you want to delete this comment? This will remove the comment and can't be undone.</p>
                         </div>
                         <div className="delete-buttons-container">
                             <button onClick={()=> setToggleDelete(false)}>NO, CANCEL</button>
@@ -20,7 +20,6 @@ const Modal= ({comment, setToggleDelete, onDeleteItem})=>{
                             </div>
                         </div>
                     </div>
-                    
                 </div>
         </Portal>
     )

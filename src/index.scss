@@ -85,8 +85,18 @@ html {
 
 body {
 	font-size: 1.6rem;
-	padding: 3.55rem 0rem;
+	padding-top: 3.55rem;
+
 }
+
+html, body{ 
+	/*scroll-behavior: auto;
+	padding-bottom: 7.2rem;
+	min-height: 100dvh;*/
+	min-height: 100dvh; 
+	scroll-behavior: auto;
+}
+
 
 :root {
 	// Primary colors

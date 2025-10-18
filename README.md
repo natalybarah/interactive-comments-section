@@ -20,9 +20,16 @@
 
 ### Screenshot
 
+![desktop](././src/screenshots/mobile.png)
+
+----
+
+![desktop](././src/screenshots/tablet.png)
+
+----
+
 ![desktop](././src/screenshots/desktop.png)
 
-Mobile and Table screenshots in readme.md 
 
 ### Links
 

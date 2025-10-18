@@ -1,70 +1,75 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of contents
 
-## Available Scripts
+- [Overview](#overview)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [Author](#author)
 
-In the project directory, you can run:
+## Overview
 
-### `npm start`
+   This is a responsive mobile, tablet and desktop comments UI where users can create, reply, edit, delete, and vote.
+   Built with React, Context API, and SCSS with state persisted in localStorage.
+   This is my solution to  Frontend Mentor's Interactive Comments Section. I focused on a smooth mobile web behavior, an inline
+   composer and a voting model that mirror's Reddit's 3 state logic.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Screenshot
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![desktop](././src/screenshots/desktop.png)
 
-### `npm test`
+Mobile and Table screenshots in readme.md 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Links
 
-### `npm run build`
+- Solution URL: (https://github.com/natalybarah/interactive-comments-section)
+- Live Site URL: (https://natalybarah.github.io/interactive-comments-section)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## My process
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+ - State management: a CommentsProvider and UserProvider expose the commentTree and current user to the app. All mutations flow through provider 
+   functions. (source of truth stays at the top)
+ - Voting model: each comment tracks a userVotes map. A user vote's can be -1, 0, +1. Clicking up/down computes delta = newVote - oldVote so the
+   score always updates correctly.
+ - Inline reply composer (mobile-first): instead of snap to top + global composer. the input renders right under the user's selected comment.
+   this avoids layout jumps when the keyboard opens
+ - Persistence: on load, the app hydrates from localStorage.  Safe defaults prevent null errors on first renders.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### Built with
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Flexbox
+- CSS Grid
+- Mobile-first workflow
+- [React](https://reactjs.org/) - JS library
+- [Sass] (https://sass-lang.com/) 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### What I learned
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Lift state up: do math and data changes in the provider (source of truth), not from child components (which are snapshots). This avoids “one render behind” issues when React batches updates.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- 3-state votes: simpler to model as toggles (old→new) than as raw click math. The delta approach keeps UI and data consistent.
 
-## Learn More
+- Recursive tree updates: neat, reusable helpers for find/update/delete across nested replies.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Mobile UX: Inline composer instead of “scroll & snap” for mobile web; fewer viewport races with the keyboard.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Continued development
+ - I want to implement an accurate time system that reflects the real time the user created a comment.
+ - Integrate firebase authentication
+ - Migrate to vite and TypeScript
 
-### Code Splitting
+### Useful resources
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- [Example resource 1](https://blog.logrocket.com/creating-reusable-pop-up-modal-react/) - This helped me understanding popup modals in react.
 
-### Analyzing the Bundle Size
+## Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- GitHub - [Nataly Barahona](https://github.com/natalybarah)
+- Twitter - [@natalycodes](https://www.twitter.com/natalycodes)
+- LinkedIn - [Nataly Barahona](www.linkedin.com/in/nataly-barahona-codes)
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

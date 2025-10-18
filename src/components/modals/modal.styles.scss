@@ -33,7 +33,7 @@
   p{
     margin-bottom: 1.6rem;
   }
-
+  @media screen and (min-width: 758px){ width: 40rem; height: 25.2rem; padding: 2.75rem 3.1rem}
 
 }
 
@@ -48,7 +48,7 @@
     border-radius: 1rem;
     color: var(--white);
     font-weight: 500;
-
+      @media screen and (min-width){ width: 16.1rem 4.8rem}
   }
 
   button:nth-child(1){

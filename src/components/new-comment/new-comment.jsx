@@ -1,6 +1,5 @@
 import { CommentsContext } from "../../context/comments-context";
 import "../new-comment/new-comment.styles.scss"
-
 import { useContext, useRef, useEffect} from "react";
 import { UserContext } from "../../context/user-context";
 

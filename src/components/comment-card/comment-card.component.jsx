@@ -20,7 +20,7 @@ const isEditing= editingCommentId === comment.id;
     return(
          <div>
             <div ref={setRef} key={comment.id} className="comment-container">
-                            <div className="user-info-container">`
+                            <div className="user-info-container">
                                 <img src={require(`../../assets/avatars/${comment.user.image.png}`)} alt=""/> 
                                     <div className="user-info">
                                         <h2>{comment.user.username}</h2>
@@ -36,14 +36,18 @@ const isEditing= editingCommentId === comment.id;
                                     </label>
                                 </form>
                                 ) :(     
-                                <p>{comment.content}</p>)
+                                <div className="comment-content">
+                                    <p>{comment.content}</p>
+                                </div>)
                         }
-                    <div className="comments-actions">
                             <div className="vote-container">
-                                <button   onClick={()=> upVote(comment, currentUserProfile.id)}><img src={PlusIcon} alt="plus"/></button>
-                                    <span>{comment.score}</span>
                                 <button onClick={()=> downVote(comment, currentUserProfile.id) }><img src={MinusIcon} alt="minus"/></button>
+                                    <span>{comment.score}</span>
+                                <button   onClick={()=> upVote(comment, currentUserProfile.id)}><img src={PlusIcon} alt="plus"/></button>
                             </div>
+
+                    <div className="comments-actions">
+                       
                      {isEditing ? (       
                         <div onClick={()=>{onUpdateItem(comment); setEditingCommentId(null)}} className="update-container">
                             <button>UPDATE</button> 
@@ -59,13 +63,12 @@ const isEditing= editingCommentId === comment.id;
                                         <span className="edit-label">Edit</span>
                                     </button>
                                 </div>)
-                                :(  <div className="reply-container">
+                                :  <div className="reply-container">
                                         <img src={ReplyIcon} alt=""/>
                                         <span  onClick={()=>{onReply(comment); setReplyClick(true)}}>Reply</span>
-                                    </div>)
-                    }
-                        { toggleDelete && ( <Modal onCancelReply={onCancelReply(null)} setToggleDelete={setToggleDelete}  comment={comment} onDeleteItem={onDeleteItem}/> )}
-                    </div> 
+                                    </div>   }
+                    </div>
+                    { toggleDelete && ( <Modal onCancelReply={()=>onCancelReply(null)} setToggleDelete={setToggleDelete}  comment={comment} onDeleteItem={onDeleteItem}/> )}
             </div>
         </div>
     )

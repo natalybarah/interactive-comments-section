@@ -1,5 +1,6 @@
-import { createContext, useState, useContext, useCallback} from "react";
+import { createContext, useState, useContext, useCallback, useEffect} from "react";
 import { UserContext } from "./user-context";
+import rawData from '../data.json';
 
 export const CommentsContext= createContext({
     commentTree: [],
@@ -65,9 +66,9 @@ const formatRelativeTime= (date)=> {
             }
         }
 
-        return 'Just now'; // Fallback for < 1 minute
+        return 'Just now'; 
     }
-    // Example Usage:
+ 
     const pastDate = new Date(Date.now()  * 24 * 60 * 60 * 1000); // 2 days ago
     //console.log(formatRelativeTime(pastDate)); // Output: "2 days ago"
     const createdAtTime= formatRelativeTime(pastDate);
@@ -76,9 +77,25 @@ const formatRelativeTime= (date)=> {
 
 export const CommentsProvider= ({children})=>{
     const {currentUserProfile} = useContext(UserContext)
-    const [commentTree, setCommentTree]= useState([]);
+   
+
+    const [commentTree, setCommentTree]= useState(()=>{
+        try{
+            const saved= localStorage.getItem("commentTree");
+            return saved ? JSON.parse(saved) : rawData.comments; // Initial value
+        } catch{
+            return rawData.comments;
+        }
+    });
+
+    
     const [commentValues, setCommentValues]=useState(defaultCommentValues);
     const [isReplyClick, setReplyClick]=useState(false);
+
+    useEffect(()=>{
+        localStorage.setItem("commentTree", JSON.stringify(commentTree))
+    }, [commentTree]);
+
 
     useCallback(formatRelativeTime, [])
      
@@ -156,7 +173,7 @@ const onUpdateItem=(targetComment)=>{
     const updatedItems=(items)=>{
         return items.map((item)=>{
             if(item.id ===targetComment.id) {
-                return {...item, content: commentValues.content}
+                return {...item, content: commentValues.content, createdAt: createdAtTime }
             } 
             if(item.replies && item.replies.length > 0){
                 return {...item, replies: updatedItems(item.replies)}

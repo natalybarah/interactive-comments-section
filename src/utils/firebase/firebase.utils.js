@@ -1,3 +1,5 @@
+// NOTE: Not used currently. Kept for future Firebase integration.
+
 import {getFirestore, initializeApp} from 'firebase/app';
 import {collection, addDoc} from 'firebase/firestore';
 

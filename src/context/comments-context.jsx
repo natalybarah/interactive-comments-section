@@ -58,7 +58,7 @@ const formatRelativeTime= (date)=> {
             minute: 60,
         };
 
-        // Find the largest matching unit (e.g., "day" for 86400 seconds)
+       
         for (const [unit, secondsInUnit] of Object.entries(intervals)) {
             if (secondsAgo >= secondsInUnit) {
             const value = Math.floor(secondsAgo / secondsInUnit);
@@ -67,10 +67,9 @@ const formatRelativeTime= (date)=> {
         }
 
         return 'Just now'; 
-    }
+}
  
-    const pastDate = new Date(Date.now()  * 24 * 60 * 60 * 1000); // 2 days ago
-    //console.log(formatRelativeTime(pastDate)); // Output: "2 days ago"
+    const pastDate = new Date(Date.now()  * 24 * 60 * 60 * 1000); 
     const createdAtTime= formatRelativeTime(pastDate);
 
 // # COMMENTS PROVIDER

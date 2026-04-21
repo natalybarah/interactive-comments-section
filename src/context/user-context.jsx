@@ -19,9 +19,7 @@ export const UserProvider= ({children})=>{
         }
     });
 
-    useEffect(()=>{ //aqui vamos a llamar a local storage object de window y guardar laninformacion que queremos
-        //en este caso, quiero guardar cual es mi currentuserprofile, y local storage solon recibe JSON objects asi que lo stringify y 
-        //llamo este efecto cada vez que hay un cambio de profile
+    useEffect(()=>{ 
         localStorage.setItem('currentUserProfile', JSON.stringify(currentUserProfile))
     }, [currentUserProfile])
 
